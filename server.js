@@ -53,6 +53,7 @@ app.post("/signup", (req, res) => {
 })
 
 app.post("/signin", (req, res) => {
+  console.log("Try Signing In");
   const query = "select * from users where name = ? and password = ?"   //
   const values = [req.body.name, req.body.password];
   db.query(query, values, (err, result) => {
