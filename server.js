@@ -6,15 +6,17 @@ const app = express();
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const port = 3001;
+require('dotenv').config();
+const port = process.env.PORT;
+const JWTSecretKey = process.env.JWT_SECRET;
 app.use(express.json());
 app.use(cors());
 
 const db = sql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "INDRASISH",
-  database: "MyStore"
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME
 })
 db.connect(err => {
   if (err) {
@@ -143,7 +145,7 @@ app.post("/request-otptoken", (req, res) => {
       if (result.length > 0) {
         
         const otp = crypto.randomInt(1000, 9999).toString();
-        const otptoken = jwt.sign({ email, otp }, "gd4b6a7e1a2a93fb53e61e89b7fa8c432e347bcfae5a94b6ad93a3f9e83b", {expiresIn: "1m"});
+        const otptoken = jwt.sign({ email, otp }, JWTSecretKey, {expiresIn: "1m"});
         const decodedToken = jwt.decode(otptoken);
         const mailoptions = {
           from: "banerjeeindra06@gmail.com",
